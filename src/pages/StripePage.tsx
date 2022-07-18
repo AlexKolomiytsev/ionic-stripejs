@@ -7,7 +7,7 @@ const StripePage: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [intent, setIntent] = useState<string>();
+  const [intent, setIntent] = useState();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: any) => {
@@ -18,7 +18,9 @@ const StripePage: React.FC = () => {
     }
 
     try {
-      if (elements && elements.getElement(CardElement)) {
+      const cardElement = elements && elements.getElement(CardElement);
+
+      if (cardElement) {
         setLoading(true);
 
         const response = await fetch('https://capable-parfait-de86c8.netlify.app/.netlify/functions/create-payment-intent');
@@ -27,8 +29,7 @@ const StripePage: React.FC = () => {
         await stripe
           .confirmCardPayment(clientSecret, {
             payment_method: {
-              // @ts-ignore
-              card: elements.getElement(CardElement),
+              card: cardElement,
               billing_details: {
                 name: 'Audrey Hepburn',
               },
@@ -39,7 +40,10 @@ const StripePage: React.FC = () => {
 
         console.log('intent', intent);
 
-        setIntent(JSON.stringify(intent.paymentIntent, null, 2));
+
+        alert(JSON.stringify(intent.paymentIntent, null, 2))
+        // @ts-ignore
+        setIntent(intent.paymentIntent);
 
         // stripe.createPaymentMethod({
         //   type: 'card',
@@ -61,7 +65,8 @@ const StripePage: React.FC = () => {
       }
     } catch (e) {
       console.log('error', e);
-      setIntent(String(e));
+      // @ts-ignore
+      setIntent(e);
     } finally {
       setLoading(false);
     }
@@ -85,7 +90,11 @@ const StripePage: React.FC = () => {
             </IonButton>
           </div>
           <div style={{paddingTop: '20px', display: 'flex', flexDirection: 'column'}}>
-            <IonText>{intent}</IonText>
+            <pre>
+              {intent && <div>
+                {JSON.stringify(intent, null, 2)}
+              </div>}
+            </pre>
           </div>
         </div>
       </IonContent>
