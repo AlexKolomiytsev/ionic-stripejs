@@ -1,0 +1,2 @@
+# ionic-stripejs
+ionic+stripejs
