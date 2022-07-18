@@ -77,6 +77,7 @@ const StripePage: React.FC = () => {
       <IonContent style={{height: '100vh', width: '100vw'}}>
         <div style={{position: 'relative', top: '30%', width: '90%', margin: 'auto'}}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+            <div style={{ paddingBottom: '20px' }}>{window.location.href}</div>
             <div style={{ border: '1px solid black', padding: '20px', width: '100%', marginBottom: '20px' }}>
               <CardElement options={{hidePostalCode: true}}/>
             </div>
