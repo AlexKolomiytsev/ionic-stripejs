@@ -41,8 +41,6 @@ const StripePage: React.FC = () => {
 
         console.log('intent', intent);
 
-
-        alert(JSON.stringify(intent.paymentIntent, null, 2))
         // @ts-ignore
         setIntent(intent.paymentIntent);
 
