@@ -1,2 +1,1 @@
-# ionic-stripejs
-ionic+stripejs
+# stripe-testing
