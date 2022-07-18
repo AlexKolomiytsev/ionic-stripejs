@@ -1,4 +1,4 @@
-import {IonButton, IonContent, IonPage, IonText, IonSpinner} from '@ionic/react';
+import {IonButton, IonContent, IonPage, IonSpinner} from '@ionic/react';
 import React, {useState} from 'react';
 import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
 
