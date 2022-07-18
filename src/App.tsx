@@ -30,7 +30,8 @@ import './theme/variables.css';
 import StripePage from './pages/StripePage';
 
 // const stripePromise = loadStripe('pk_test_MaMhlqv0uPa8mFSOKTJGYO8U');
-const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+// const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+const stripePromise = loadStripe('pk_live_51LMwD2JmyNf7GGPubBTis0cxOjbVzTa7pAuAvQXXHzVA1p1S3laYdn7KdbCBLKQdlw80j6yBqJA3LhnL3lh96YLn00E5eUMpgY');
 
 setupIonicReact();
 

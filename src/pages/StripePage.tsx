@@ -24,6 +24,7 @@ const StripePage: React.FC = () => {
         setLoading(true);
 
         const response = await fetch('https://capable-parfait-de86c8.netlify.app/.netlify/functions/create-payment-intent');
+        // const response = await fetch('http://localhost:8888/.netlify/functions/create-payment-intent');
         const {clientSecret} = await response.json();
 
         await stripe
