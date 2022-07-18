@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'stripe-testing',
+  appId: '404f32d3',
+  appName: 'test-ionic-with-stripe',
   webDir: 'build',
   bundledWebRuntime: false,
   server: {
