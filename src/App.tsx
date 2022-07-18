@@ -44,13 +44,13 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/stripe">
+        <Route exact path="/home">
           <Elements stripe={stripePromise}>
             <StripePage />
           </Elements>
         </Route>
         <Route exact path="/">
-          <Redirect to="/stripe" />
+          <Redirect to="/home" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
