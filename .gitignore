@@ -1,2 +1,5 @@
 node_modules/
-.idea
+id_ed25519_key
+id_ed25519_key.pub
+src/utils/const.ts
+ios/

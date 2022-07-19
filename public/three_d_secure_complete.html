@@ -1,0 +1,55 @@
+<script src="https://core.spreedly.com/iframe/iframe-v1.min.js"></script>
+<script src="https://core.spreedly.com/iframe/express-2.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<style>
+.fitToModal {
+  width: 100%;
+  height: 760px;
+}
+.hidden {
+  display: none;
+}
+</style>
+
+<div id="device-fingerprint" class="hidden">
+</div>
+
+<div id="challenge-modal">
+  <div id="challenge"></div>
+</div>
+
+<script>
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let key = urlParams.get('key');
+  let order_id = urlParams.get('order_id');
+  let payment_provider = urlParams.get('payment_provider');
+  let url_schema = urlParams.get('url_schema');
+  let token = urlParams.get('token');
+  let browser_info = urlParams.get('browser_info');
+
+  var lifecycle = new Spreedly.ThreeDS.Lifecycle({
+    environmentKey: key,
+    hiddenIframeLocation: 'device-fingerprint',
+    challengeIframeLocation: 'challenge',
+    transactionToken: token,
+    challengeIframeClasses: 'fitToModal'
+  })
+
+
+  var on3DSstatusUpdatesFn = function(threeDsStatusEvent) {
+    complete_path = `https://staging.fisikal.com/api/mobile/spreedly_express/confirm_checkout?url_schema=${url_schema}&status=threeDsStatusEvent.action&transaction_token=${token}&order_id=${order_id}&payment_provider=${payment_provider}`;
+
+    if (threeDsStatusEvent.action === 'succeeded') {
+      window.location.href = complete_path
+    } else if (threeDsStatusEvent.action === 'error') {
+      window.location.href = complete_path
+    }
+  }
+
+  // Setup event handling and kickoff 3DSecure lifecycle
+  Spreedly.on('3ds:status', on3DSstatusUpdatesFn)
+  lifecycle.start()
+</script>

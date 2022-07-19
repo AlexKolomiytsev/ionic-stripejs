@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: '404f32d3',
-  appName: 'test-ionic-with-stripe',
+  appId: 'io.ionic.starter',
+  appName: 'e-gym-widget',
   webDir: 'build',
   bundledWebRuntime: false,
   server: {

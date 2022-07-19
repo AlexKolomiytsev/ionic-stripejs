@@ -1,0 +1,61 @@
+.class-booking-card {
+  border-radius: 8px;
+  margin: 10px 15px;
+}
+
+.class-booking-header {
+  width: 100%;
+  padding: 0px 0px;
+}
+
+.class-booking-title {
+  padding: 8px 15px 2px;
+}
+
+.date-and-time-text {
+  letter-spacing: normal;
+  color: var(--ion-text-secondary-color);
+  padding-top: 5px;
+}
+
+.separator-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #828080;
+  margin: 7px 5px;
+}
+
+.status-chip {
+  height: fit-content;
+  background: #3FAF96;
+  border-radius: 4px;
+  color: #ffffff;
+  line-height: 12px;
+  padding: 3px 8px;
+  margin: 0px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: lowercase;
+}
+
+.line {
+  background: #EBEBEB;
+  border-radius: 2px;
+  width: 72px;
+  height: 3px;
+  margin-top: 3px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.progress {
+  background: var(--ion-color-success);
+  border-radius: 2px;
+  /* width: 80%; */
+  height: 3px;
+}

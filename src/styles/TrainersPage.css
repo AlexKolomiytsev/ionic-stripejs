@@ -1,0 +1,18 @@
+.trainer-card {
+  padding: 0px;
+  border-radius: 8px;
+  min-width: 150px;
+  width: calc(50vw - 30px);
+  margin: 10px;
+}
+
+.trainer-card-content {
+  padding: 0px;
+}
+
+.trainer-img {
+  width:calc(50vw - 30px);
+  height:calc(50vw - 60px);
+  object-position: center top;
+  object-fit:cover;
+}

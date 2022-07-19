@@ -1,0 +1,40 @@
+<script src="https://core.spreedly.com/iframe/express-2.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<script>
+//<![CDATA[
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let amount   = urlParams.get('amount');
+  let company_name = urlParams.get('company_name');
+  let email = urlParams.get('email');
+  let full_name = urlParams.get('full_name');
+  let key = urlParams.get('key');
+  let order_id = urlParams.get('order_id');
+  let payment_provider = urlParams.get('payment_provider');
+  let url_schema = urlParams.get('url_schema');
+
+  SpreedlyExpress.init(key, {
+    "amount": amount,
+    "company_name": company_name,
+    "full_name": full_name
+  }, {  
+    "email": email
+  });
+
+  SpreedlyExpress.onPaymentMethod(function(token, paymentMethod) {
+    let browser_info = Spreedly.ThreeDS.serialize('05', 'text/html');
+    console.log(browser_info);  
+    // window.location.href = `https://staging.fisikal.com/api/mobile/spreedly_express/confirm_checkout?spreedly%5Border_id%5D=${order_id}&amp;spreedly%5Bpayment_provider%5D=${payment_provider}&amp;spreedly%5Burl_schema%5D=${url_schema}&spreedly[token]=${token}&spreedly[browser_info]=${browser_info}`;
+    window.location.href = `/three_d_secure_complete.html?key=${key}&order_id=${order_id}&payment_provider=${payment_provider}&url_schema=${url_schema}&token=${token}&browser_info=${browser_info}`;
+  });
+
+  SpreedlyExpress.onViewClose(function() {
+    // window.location.href = `https://staging.fisikal.com/api/mobile/spreedly_express/confirm_checkout?closed=true&amp;order_id==${order_id}&amp;url_schema=${url_schema}`;
+  });
+
+  setTimeout(function(){ SpreedlyExpress.openView();}, 500);
+
+//]]>
+</script>
