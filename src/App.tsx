@@ -450,6 +450,10 @@ const App: React.FC<AppProps> = ({ context }) => {
                 <Spreedly />
               </Route>
 
+              <Route exact path="/home">
+                <Redirect to="/flow_selection" />
+              </Route>
+
               {/*}<IonTabs>
                 <IonRouterOutlet>
                   <Route exact path="/tab1">
