@@ -437,15 +437,15 @@ const App: React.FC<AppProps> = ({ context }) => {
               </Route>
 
               <Route exact path='/stripe'>
-              {userData &&
-                (userData.credit_card && userData.credit_card.title) ? 
-                  // <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
+                {userData &&
+                (userData.credit_card && userData.credit_card.title) ?
+                  <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
+                  : <Payment/>
+                  //   <Elements stripe={stripePromise}>
+                  //      <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
+                  //   </Elements>
                   // : <Payment/>
-                <Elements stripe={stripePromise}>
-                   <StripePage/>
-                </Elements>
-              : <Payment/>
-              }
+                }
               </Route>
 
               <Route exact path='/stripe_capacitor'>
@@ -462,6 +462,10 @@ const App: React.FC<AppProps> = ({ context }) => {
 
               <Route exact path='/spreedly'>
                 <Spreedly />
+              </Route>
+
+              <Route exact path='/home'>
+                <Redirect to="/flow_selection" />
               </Route>
 
               {/*}<IonTabs>
