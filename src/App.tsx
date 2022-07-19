@@ -3,6 +3,7 @@ import {createBrowserHistory} from 'history';
 import './i18n';
 import { Redirect, Route } from 'react-router-dom';
 import {
+  IonAlert,
   IonApp,
   IonButton,
   IonContent,
@@ -20,11 +21,12 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { PortalsProvider } from './hooks/usePortalsContext';
 
-// import {Elements} from '@stripe/react-stripe-js';
-// import {loadStripe} from '@stripe/stripe-js';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 
 import { auth } from './utils/const';
 import { authorizeUser } from './utils/auth';
+import { failedApiCall } from './utils/requests';
 import { UserData, ClubSettings } from './utils/data';
 import { fetchUserData, fetchSettings, fetchClient } from './utils/utils';
 import { createStore } from './utils/IonicStorage';
@@ -43,7 +45,7 @@ import BookedClass from './pages/BookedClass';
 import TrainersPage from './pages/TrainersPage';
 import TrainerProfile from './pages/TrainerProfile';
 import TrainerServiceList from './pages/TrainerServiceList';
-import PTServiceDetail from './pages/PTServiceDetail';
+import ServiceDetail from './pages/ServiceDetail';
 import PtTimeslots from './pages/PtTimeslots';
 import PTTimeSelector from './pages/PTTimeSelector';
 import ServiceList from './pages/ServiceList';
@@ -59,7 +61,7 @@ import PTProductDetail from './pages/PTProductDetail';
 import PastPurchases from './pages/PastPurchases';
 import Receipt from './pages/Receipt';
 import Payment from './pages/Payment';
-import StripePage from './pages/StripePage';
+import StripePage from './pages/StripePage2';
 import Stripe3Ds from './pages/Stripe3Ds';
 import StripeResult from './pages/StripeResult';
 import Spreedly from './pages/Spreedly';
@@ -87,8 +89,9 @@ import './styles/index.css';
 import './styles/modal.css';
 import StripeCapasitor from './pages/StripeCapasitor';
 import UpcomingTraining from './pages/UpcomingTraining';
+import Portals from '@ionic/portals';
 
-// const stripePromise = loadStripe('pk_test_MaMhlqv0uPa8mFSOKTJGYO8U');
+const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 type AppProps = {
   context: {
@@ -141,7 +144,7 @@ const App: React.FC<AppProps> = ({ context }) => {
             // await setModalBody('');
             // setModalOpen(true);
             await setUserData(resp);
-            // setShowLoading(false);
+            setShowLoading(false);
             await setClubSettings(await fetchSettings());
           }
           if(resp === false) {
@@ -203,17 +206,15 @@ const App: React.FC<AppProps> = ({ context }) => {
     return "#"+RR+GG+BB;
   }
 
-
-
   return(
       <IonApp>
-        {/*}<IonLoading
+        <IonLoading
           cssClass='loading'
           isOpen={showLoading}
           onDidDismiss={() => setShowLoading(false)}
-        />*/}
+        />
 
-        <IonModal
+        {/*<IonModal
           isOpen={modalOpen}
         >
           <IonContent>
@@ -222,12 +223,22 @@ const App: React.FC<AppProps> = ({ context }) => {
                 <p className='modal-header' style={{color: 'red'}}>{modalHeader}</p>
                 <p className='modal-text'>{modalBody}</p>
               </IonText>
-              {/*}<IonButton color="light" style={{margin: 'auto', marginTop: '10px'}} onClick={() => {displayData === 'none' ? setDisplayData('block') : setDisplayData('none');}}>Display data</IonButton>
-              <IonText className='modal-text' style={{display: `${displayData}`, paddingTop: '10px'}}>{authData}</IonText>*/}
               {modalHeader !== 'Error' && modalHeader !== 'ProfileFetch error' && <IonButton onClick={() => {setModalOpen(false)}}>Close</IonButton>}
             </div>
           </IonContent>
-        </IonModal>
+            </IonModal>*/}
+
+          <IonAlert
+            isOpen={modalOpen || failedApiCall === true}
+            onDidDismiss={async () => {
+              await Portals.publish({ topic: 'subscription', data: {type: 'dismiss', data: null } });
+            }}
+            cssClass='my-custom-class'
+            mode='ios'
+            header={'Error'}
+            message={'Something went wrong. Please try again...'}
+            buttons={['OK']}
+          />
 
         <PortalsProvider initialContext={ context }>
           {authorized &&
@@ -287,7 +298,10 @@ const App: React.FC<AppProps> = ({ context }) => {
               </Route>
 
               <Route exact path='/flow_selection'>
-                <FlowSelection default_location_id={userData.default_location_id}/>
+                {/*<FlowSelection default_location_id={userData.default_location_id}/>*/}
+                {userData &&
+                  <PersonalTrainingBooking client_id={userData ? userData.id : -1} default_location_id={userData.default_location_id}/>
+                }
               </Route>
 
               <Route exact path='/personal_training_booking'>
@@ -337,7 +351,7 @@ const App: React.FC<AppProps> = ({ context }) => {
               </Route>
 
               <Route exact path="/service_detail">
-                  <PTServiceDetail/>
+                  <ServiceDetail/>
               </Route>
 
               <Route exact path='/pt_timeslots'>
@@ -425,12 +439,12 @@ const App: React.FC<AppProps> = ({ context }) => {
               <Route exact path='/stripe'>
               {userData &&
                 (userData.credit_card && userData.credit_card.title) ? 
-                  <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
-                  : <Payment/>
-              //   <Elements stripe={stripePromise}>
-              //      <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
-              //   </Elements>
-              // : <Payment/>
+                  // <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
+                  // : <Payment/>
+                <Elements stripe={stripePromise}>
+                   <StripePage/>
+                </Elements>
+              : <Payment/>
               }
               </Route>
 
@@ -448,10 +462,6 @@ const App: React.FC<AppProps> = ({ context }) => {
 
               <Route exact path='/spreedly'>
                 <Spreedly />
-              </Route>
-
-              <Route exact path="/home">
-                <Redirect to="/flow_selection" />
               </Route>
 
               {/*}<IonTabs>

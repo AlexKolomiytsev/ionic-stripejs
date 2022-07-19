@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonAlert, IonButton, IonContent, IonFooter, IonInput, IonModal, IonPage,  IonText, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonFooter, IonInput, IonModal, IonPage,  IonText, IonToolbar, isPlatform } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { set } from '../utils/IonicStorage';
 import { useTranslation } from 'react-i18next';
@@ -10,8 +10,6 @@ import { apiPut, apiPostFetch } from '../utils/requests';
 import '../styles/index.css';
 import '../styles/modal.css';
 import '../styles/text.css';
-import { isPlatform } from '@ionic/core';
-import ButtonsFooter from './ButtonsFooter';
 
 type Props = {
   flow: string;
@@ -108,80 +106,56 @@ const BookAndBuyModal: React.FC<Props> = ({ flow, setPaymentMethod, setCardId, i
     className='modal-rounded'
     isOpen={isOpen}
     canDismiss={true}
-    breakpoints={flow === 'product' ? [0.5] : [0.5]}
-    initialBreakpoint={flow === 'product' ? 0.5 : 0.5}
+    breakpoints={flow === 'product' ? [0.4] : [0.4]}
+    initialBreakpoint={flow === 'product' ? 0.4 : 0.4}
     onDidDismiss={() => setOnClose(false)}
   >
-    <IonPage style={{height: `${flow === 'product' ? '50vh' : '50vh'}`}}>
-    <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={ async () => {
-          await setShowAlert(false);
-          await setOnClose(false);
-          history.push('/flow_selection');
-        }}
-        cssClass='my-custom-class'
-        mode='ios'
-        header={t('alert.success')}
-        message={t('alert.payment_intent_created')}
-        buttons={['OK']}
-      />
-    <IonContent>
-      <div className='modal-body'>
-        <div style={{ width: '100%', padding: '30px', paddingTop: '42px', paddingBottom: '0px', alignItems: 'center'}}>
-          <div className='two-side-container package-card' style={{ width: '100%'}}>
-            <div style={{display: 'flex', flexDirection: 'column'}}>
-              <IonText className='EGymText-16px-032' style={{fontWeight: 600, marginTop: 'auto', marginBottom: 'auto'}}>{currentPackage.name}</IonText>
-              <IonText className='EGymText-14px-032' >{t('paid_by_stored_card')}</IonText>
-            </div>
-            <IonText className='EGymText-16px-032' style={{fontWeight: 600, marginTop: 'auto', marginBottom: 'auto'}}>{currentPackage.custom_price && price ? currency_symbols[currentPackage.custom_price.currency_code] + price.toFixed(2) : ' '}</IonText>
-          </div>
-          <div className='two-side-container package-card' style={{width: '100%', marginTop: '30px', backgroundColor: '#F4F4F4', borderRadius: '10px'}}>
-            <IonInput value={promocode} placeholder={t('got_a_promo_code')} onIonChange={e => setPromocode(e.detail.value!)} style={{ paddingLeft: '10px' }}></IonInput>
-            <IonButton className='apply-button' onClick={applyPromocode}>{t('apply')}</IonButton>
-          </div>
-          {message && <IonText className='EGymText-14px-032' style={{color: message[1]}}>{message[0]}</IonText>}
-        </div>
-      </div>
-      {flow === 'product' ?
-      <div style={{position: 'absolute', bottom: 0, width: '100%', paddingBottom: '40px'}}> 
-        <IonButton className='color-button' onClick={placeOrder}>{t('select_payment_method')}</IonButton>
-      </div>
-        :
-      <div className='buttons-footer' style={{position: 'absolute', bottom: 0, width: '100%', paddingBottom: '40px'}}>
-        <IonButton className='color-button' onClick={placeOrder}>{t('footer.purchase_and_book')}</IonButton>
-        <IonButton className='white-button' onClick={ async () => {
-          await setOnClose(false);
-          history.push('/pt_products_list')}}>
-            {t('footer.more_products')}
-        </IonButton>
-      </div>
-    }
-    </IonContent>
-    {/*flow === 'product' ?
-          <ButtonsFooter text={t('select_payment_method')} onClick={placeOrder}/>
-            :
-          <ButtonsFooter text={t('footer.purchase_and_book')} onClick={placeOrder} secondButtonText={t('footer.more_products')} onClickSecond={async () => {
+    <IonPage style={{height: `${flow === 'product' ? '40vh' : '40vh'}`}}>
+      <IonAlert
+          isOpen={showAlert}
+          onDidDismiss={ async () => {
+            await setShowAlert(false);
             await setOnClose(false);
-            history.push('/pt_products_list')}}/>
-        /*}
-
-    {flow === 'product' ?
-      <IonFooter style={{position: 'absolute', bottom: 0, width: '100%', minHeight: '66px'}}> 
-        <IonButton className='color-button' onClick={placeOrder}>{t('select_payment_method')}</IonButton>
-      </IonFooter>
-        :
-      <IonFooter className='buttons-footer' style={{position: 'absolute', bottom: 0, width: '100%', minHeight: '108px'}}>
-        <IonButton className='color-button' onClick={placeOrder}>{t('footer.purchase_and_book')}</IonButton>
-        <IonButton className='white-button' onClick={ async () => {
-          await setOnClose(false);
-          history.push('/pt_products_list')}}>
-            {t('footer.more_products')}
-        </IonButton>
-      </IonFooter>
-    }
-            {/* className='footer-div-one-button' style={{top: '40vh', zIndex: 40}} */}
-            {/* className='buttons-footer' style={{position: 'relative', bottom: '-100px'}} */}
+            history.push('/flow_selection');
+          }}
+          cssClass='my-custom-class'
+          mode='ios'
+          header={t('alert.success')}
+          message={t('alert.payment_intent_created')}
+          buttons={['OK']}
+        />
+      <IonContent>
+        <div className='modal-body'>
+          <div style={{ width: '100%', padding: '30px', paddingTop: '42px', paddingBottom: '0px', alignItems: 'center'}}>
+            <div className='two-side-container package-card' style={{ width: '100%'}}>
+              <div style={{display: 'flex', flexDirection: 'column'}}>
+                <IonText className='EGymText-16px-032' style={{fontWeight: 600, marginTop: 'auto', marginBottom: 'auto'}}>{currentPackage.name}</IonText>
+                <IonText className='EGymText-14px-032' >{t('paid_by_stored_card')}</IonText>
+              </div>
+              <IonText className='EGymText-16px-032' style={{fontWeight: 600, marginTop: 'auto', marginBottom: 'auto'}}>{currentPackage.custom_price && price ? currency_symbols[currentPackage.custom_price.currency_code] + price.toFixed(2) : ' '}</IonText>
+            </div>
+            <div className='two-side-container package-card' style={{width: '100%', marginTop: '30px', backgroundColor: '#F4F4F4', borderRadius: '10px'}}>
+              <IonInput value={promocode} placeholder={t('got_a_promo_code')} onIonChange={e => setPromocode(e.detail.value!)} style={{ paddingLeft: '10px' }}></IonInput>
+              <IonButton className='apply-button' onClick={applyPromocode}>{t('apply')}</IonButton>
+            </div>
+            {message && <IonText className='EGymText-14px-032' style={{color: message[1]}}>{message[0]}</IonText>}
+          </div>
+        </div>
+        {flow === 'product' ?
+        <div className='modal-footer-div' style={{paddingBottom: `${isPlatform("ios") ? '40px' : '0px'}`}}> 
+          <IonButton className='color-button' onClick={placeOrder}>{t('select_payment_method')}</IonButton>
+        </div>
+          :
+        <div className='modal-footer-div' style={{paddingBottom: `${isPlatform("ios") ? '40px' : '0px'}`}}>
+          <IonButton className='color-button' onClick={placeOrder}>{t('footer.purchase_and_book')}</IonButton>
+          <IonButton className='white-button' onClick={ async () => {
+            await setOnClose(false);
+            history.push('/pt_products_list')}}>
+              {t('footer.more_products')}
+          </IonButton>
+        </div>
+      }
+      </IonContent>
     </IonPage>
   </IonModal>);
 };

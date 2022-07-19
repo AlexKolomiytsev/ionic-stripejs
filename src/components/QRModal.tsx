@@ -6,7 +6,7 @@ import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import ButtonsFooter from './ButtonsFooter';
+import BasicFooter from './BasicFooter';
 
 import '../styles/modal.css';
 import '../styles/index.css';
@@ -56,7 +56,7 @@ const QRModal: React.FC<Props> = ({ isOpen, setOnClose }) => (
             </p>
           </SwiperSlide>
         </Swiper>
-        <ButtonsFooter text='Finish' onClick={() => {setOnClose(false);}} />
+        <BasicFooter text='Finish' onClick={() => {setOnClose(false);}} />
       </div>
     </IonContent>
   </IonModal>

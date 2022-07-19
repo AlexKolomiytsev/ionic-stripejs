@@ -8,7 +8,7 @@ import { get, set } from '../utils/IonicStorage';
 import { currency_symbols, currency_decimals, ServicePackageShow } from '../utils/data';
 import { fetchPackageShow } from '../utils/utils';
 
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 import BookAndBuyModal from '../components/BookAndBuyModal';
 
 import '../styles/index.css';
@@ -149,11 +149,8 @@ const PTProductDetail: React.FC<Props> = ({ client_id }) => {
             <IonText style={{paddingTop: '4px'}}>{currentProduct.description}</IonText>
           </div>
         </div>}
-        {/*<div className='footer-div-one-button' >
-          <ButtonsFooter text={t('footer.purchase')} onClick={() => {setModalOpen(true);}} />
-        </div>*/}
       </IonContent>
-      <ButtonsFooter text={t('footer.purchase')} onClick={() => {setModalOpen(true);}} />
+      <BasicFooter text={t('footer.purchase')} onClick={() => {setModalOpen(true);}} />
     </IonPage>
   );
 };

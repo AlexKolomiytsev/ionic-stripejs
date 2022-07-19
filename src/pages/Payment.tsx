@@ -14,7 +14,7 @@ import { get } from '../utils/IonicStorage';
 import BasicHeader from '../components/BasicHeader';
 import CreditCard from '../components/CreditCard';
 import YourPurchase from '../components/YourPurchase';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 import '../styles/index.css';
 import '../styles/text.css';
@@ -190,11 +190,11 @@ const Payment: React.FC<Props> = ({ fourDigits }) => {
               </div>}
           </div>
         {/*<div className='buttons-footer'>
-          <ButtonsFooter text={t('footer.confirm_purchase')} onClick={confirmPurchase} disabled={disabled} secondButtonText={t('payment.cancel')} onClickSecond={() => history.push('/classes')}/>{/* disabled={fourDigits ? false : true}
+          <BasicFooter text={t('footer.confirm_purchase')} onClick={confirmPurchase} disabled={disabled} secondButtonText={t('payment.cancel')} onClickSecond={() => history.push('/classes')}/>{/* disabled={fourDigits ? false : true}
             </div>*/}
        </div>}
       </IonContent>
-      <ButtonsFooter text={t('footer.confirm_purchase')} onClick={confirmPurchase} disabled={disabled} secondButtonText={t('payment.cancel')} onClickSecond={() => history.push('/classes')}/>
+      <BasicFooter text={t('footer.confirm_purchase')} onClick={confirmPurchase} disabled={disabled} secondButtonText={t('payment.cancel')} onClickSecond={() => history.push('/classes')}/>
     </IonPage>
   );
 

@@ -1,6 +1,6 @@
 import { auth } from './const';
 
-let failedApiCall = false;
+export let failedApiCall = false;
 
 export const apiFetch = async (endpoint: string, params = "") => {
   console.log(auth.url + endpoint + params);

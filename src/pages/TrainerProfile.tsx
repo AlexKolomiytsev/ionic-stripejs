@@ -9,7 +9,7 @@ import { apiPostFetch } from '../utils/requests';
 import { fetchTrainerData, fetchPackages } from '../utils/utils';
 import { get, set } from '../utils/IonicStorage';
 
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 import BookAndBuyModal from '../components/BookAndBuyModal';
 
 import '../styles/index.css';
@@ -188,12 +188,12 @@ const TrainerProfile: React.FC<Props> = ({ cover_photo, client_id }) => {
         </div>}
       </IonContent>
       {currentTrainer && (flow === 'trainers' ? 
-          <ButtonsFooter text={t('book') + ' ' + currentTrainer.name.split(' ')[0]} onClick={ async () => {
+          <BasicFooter text={t('book') + ' ' + currentTrainer.name.split(' ')[0]} onClick={ async () => {
             await set('current_tab_name', currentTrainer.name.split(' ')[0]);
             history.push('/trainer_services');
           }} secondButtonText={t('footer.buy_products')} onClickSecond={() => history.push('/pt_products_list')}/>
            : 
-          <ButtonsFooter text={t('book') + ' ' + currentTrainer.name.split(' ')[0]} onClick={serviceBooking} secondButtonText={t('footer.buy_products')} onClickSecond={() => history.push('/pt_products_list')}/>)
+          <BasicFooter text={t('book') + ' ' + currentTrainer.name.split(' ')[0]} onClick={serviceBooking} secondButtonText={t('footer.buy_products')} onClickSecond={() => history.push('/pt_products_list')}/>)
         }
     </IonPage>
   );

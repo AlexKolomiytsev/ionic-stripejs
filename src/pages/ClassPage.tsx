@@ -16,7 +16,7 @@ import Segment from '../components/Segment';
 import QRModal from '../components/QRModal';
 import NoClassesPlaceholder from '../components/NoClassesPlaceholder';
 import SpotsLeft from '../components/SpotsLeft';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 import '../styles/index.css';
 import { executeQuotaErrorCallbacks } from 'workbox-core/_private';
@@ -162,7 +162,7 @@ const ClassPage: React.FC<Props> = ({ firstName, userPicture, client_id }) => {
         )}
         {currentClass && 
           <div  className='footer-div-one-button' style={{bottom: '-80px'}} >
-            <ButtonsFooter text={currentClass.attended_clients_count === currentClass.service_group_size ? t('footer.join_waitlist') : t('footer.book_class')} onClick={() => {
+            <BasicFooter text={currentClass.attended_clients_count === currentClass.service_group_size ? t('footer.join_waitlist') : t('footer.book_class')} onClick={() => {
               if(currentClass.attended_clients_count !== currentClass.service_group_size) {
                 bookClass();
               }

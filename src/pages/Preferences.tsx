@@ -9,7 +9,7 @@ import { fetchNotifications, fetchLinked, fetchLocations, fetchRegions, compareO
 import { apiPut } from '../utils/requests';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 // import './Preferences.css';
 import '../styles/index.css';
@@ -331,11 +331,8 @@ const ProfilePreferences: React.FC<Props> = ({ location_id, hashed_permissions }
             </IonItemGroup>
           </IonList>*/}
         </div>
-        {/*<div className='footer-div-one-button' >
-          <ButtonsFooter text={t('footer.subscribe_to_calendar')} onClick={changePermissions}/>
-        </div>*/}
       </IonContent>
-      <ButtonsFooter text={t('footer.subscribe_to_calendar')} onClick={changePermissions}/>
+      <BasicFooter text={t('footer.subscribe_to_calendar')} onClick={changePermissions}/>
     </IonPage>
   );
 };

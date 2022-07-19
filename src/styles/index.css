@@ -470,6 +470,7 @@ ion-footer {
   bottom: 0px;
   z-index: 20;
   background: #FFFFFF;
+  border-top: solid 1px #D6D5D5;
 }
 
 .footer-div-one-button {
@@ -477,6 +478,7 @@ ion-footer {
   bottom: 0px;
   z-index: 20;
   background: #FFFFFF;
+  border-top: solid 1px #D6D5D5;
 }
 
 .selector-background {
@@ -592,4 +594,24 @@ ion-modal {
   margin: 0px;
   --padding-start: 0px;
   --padding-end: 0px;
+}
+
+.sc-ion-action-sheet-ios-h {
+  --button-color: #007AFF;
+} 
+
+.action-sheet-button.sc-ion-action-sheet-ios {
+  border-top: rgba(17, 17, 17, 0.5);
+  font-weight: 500;
+}
+
+.action-sheet-cancel.sc-ion-action-sheet-ios {
+  font-weight: 600;
+}
+
+.modal-footer-div {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: solid 1px #D6D5D5;
 }

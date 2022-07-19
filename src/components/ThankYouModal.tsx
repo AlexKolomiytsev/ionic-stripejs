@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IonBreadcrumbs, IonBreadcrumb, IonButton, IonContent, IonFooter, IonModal, IonSlide, IonSlides, IonText, IonTextarea } from '@ionic/react';
 import { useTranslation } from 'react-i18next';
 
-import ButtonsFooter from './ButtonsFooter';
+import BasicFooter from './BasicFooter';
 
 import '../styles/index.css';
 import { t } from 'i18next';
@@ -29,7 +29,7 @@ const ThankYouModal: React.FC<Props> = ({ isOpen, setOnClose }) => {
           <IonText className='modal-text' style={{paddingTop: '30px'}}>{t('your_feedback')}</IonText>
         </div>
         <div className='modal-footer-one-button'>
-          <ButtonsFooter text={t('close')} onClick={() => {setOnClose(false);}}/>
+          <BasicFooter text={t('close')} onClick={() => {setOnClose(false);}}/>
         </div>
       </IonContent>
     </IonModal>

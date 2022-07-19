@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { get, set } from '../utils/IonicStorage';
 import { TrainerActivity } from '../utils/data';
 
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 import '../styles/index.css';
 import '../styles/text.css';
 
 
-const PTServiceDetail: React.FC = () => {
+const ServiceDetail: React.FC = () => {
 
   const { t } = useTranslation();
   let history = useHistory();
@@ -60,14 +60,8 @@ const PTServiceDetail: React.FC = () => {
             <IonText  style={{paddingTop: '4px'}}>{currentService.service.declaration}</IonText>
           </div>}
         </div>
-        {/*<div className='buttons-footer'>
-          <ButtonsFooter text={t('book')} onClick={ async () => {
-            // await set('current_tab_name', currentService.service_title);
-            history.push('/pt_timeslots');
-          }}/>
-        </div>*/}
       </IonContent>}
-      <ButtonsFooter text={t('book')} onClick={ async () => {
+      <BasicFooter text={t('book')} onClick={ async () => {
             // await set('current_tab_name', currentService.service_title);
             history.push('/pt_timeslots');
           }}/>
@@ -75,4 +69,4 @@ const PTServiceDetail: React.FC = () => {
   );
 };
 
-export default PTServiceDetail;
+export default ServiceDetail;

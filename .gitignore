@@ -1,5 +1,2 @@
-node_modules/
-id_ed25519_key
-id_ed25519_key.pub
-ios/
+node_modules
 .idea

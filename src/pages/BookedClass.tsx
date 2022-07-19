@@ -16,7 +16,7 @@ import Segment from '../components/Segment';
 import QRModal from '../components/QRModal';
 import NoClassesPlaceholder from '../components/NoClassesPlaceholder';
 import SpotsLeft from '../components/SpotsLeft';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 import '../styles/index.css';
 import { executeQuotaErrorCallbacks } from 'workbox-core/_private';
@@ -138,7 +138,7 @@ const BookedClass: React.FC<Props> = ({ firstName, userPicture, client_id }) => 
         )}
       </IonContent>
       {currentClass && 
-          <ButtonsFooter text={t('footer.cancel_booking')} onClick={cancelBooking}/>
+          <BasicFooter text={t('footer.cancel_booking')} onClick={cancelBooking}/>
         }
     </IonPage>
   );

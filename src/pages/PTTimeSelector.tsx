@@ -10,7 +10,7 @@ import { apiPostFetch } from '../utils/requests';
 import { get, set, remove } from '../utils/IonicStorage';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 import BookAndBuyModal from '../components/BookAndBuyModal';
 
 // import './PTTimeSelector.css';
@@ -286,9 +286,9 @@ const PtTimeslots: React.FC<Props> = ({ client_id, minutes_interval }) => {
           </IonItem>
         </div>
         <div className='buttons-footer'>
-          {(flow === 'trainers' && <ButtonsFooter text={t('footer.complete_booking')} onClick={serviceBooking} secondButtonText={t('payment.cancel')} onClickSecond={() => {history.push('/flow_selection')}}/>)
+          {(flow === 'trainers' && <BasicFooter text={t('footer.complete_booking')} onClick={serviceBooking} secondButtonText={t('payment.cancel')} onClickSecond={() => {history.push('/flow_selection')}}/>)
            ||
-           (flow === 'services' && <ButtonsFooter text={t('footer.find_a_trainer')} onClick={async () => { await set('since', selectedTime);
+           (flow === 'services' && <BasicFooter text={t('footer.find_a_trainer')} onClick={async () => { await set('since', selectedTime);
           await set('till', endTime);
           history.push('/trainers'); }} secondButtonText={t('payment.cancel')} onClickSecond={() => {history.push('/flow_selection')}}/>)}
         </div>

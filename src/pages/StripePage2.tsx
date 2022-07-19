@@ -1,123 +1,105 @@
-import { IonButton, IonContent, IonHeader, IonLoading, IonPage, IonText } from '@ionic/react';
-import { useState, useEffect } from 'react';
+import {IonButton, IonContent, IonPage, IonSpinner} from '@ionic/react';
+import React, {useState} from 'react';
 import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
-import { get, set } from '../utils/IonicStorage';
-import { ServicePackage, ServicePackageShow } from '../utils/data';
-import { apiPostFetch } from '../utils/requests';
-import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
-type Props = {
-  name: string;
-  fourDigits?: string;
-}
+const StripePage: React.FC = () => {
 
-const CheckoutForm: React.FC<Props> = ({ name, fourDigits }) => {
-
-  let history = useHistory();
-  const { t } = useTranslation();
-  
   const stripe = useStripe();
   const elements = useElements();
-  const [flow, setFlow] = useState('');
-  const [orderId, setOrderId] = useState<number>();
-  const [confirmed, setConfirmed] = useState<boolean>();
-  const [currentProduct, setCurrentProduct] = useState<ServicePackage | ServicePackageShow>();
-  const [cardNumber, setCardNumber] = useState<string>();
-  const [expMonth, setExpMonth] = useState<number>();
-  const [expYear, setExpYear] = useState<number>();
-  const [cvc, setCvc] = useState<string>();
-  const [stripeData, setStripeData] = useState<any>('test');
-  const [disabled, setDisabled] = useState<boolean>(false);
-  const [stripe3Ds, setStripe3Ds] = useState<string>();
-  const [showLoading, setShowLoading] = useState(true);
-  const [error, setError] = useState<any>('');
 
-  useEffect(() => {
-    const getProduct = async () => {
-      let current_flow = await get('payment_flow');
-      let order_id = await get('order_id');
-      setOrderId(order_id);
-      console.log(order_id);
-      await setFlow(current_flow);
-      let current_product = await get('current_product');
-      await setCurrentProduct(current_product);
-      console.log(current_product);
-      setShowLoading(false);
-      console.log(fourDigits);
-    }
-
-    getProduct();
-  }, []);
+  const [intent, setIntent] = useState();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: any) => {
-    // We don't want to let default form submission happen here,
-    // which would refresh the page.
-    console.log('test');
     event.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
     try {
-      // stripe.createToken(card).then(async (response: any) => {
-      //   // setStripeData(response.card);
-      //   let body = {
-      //     stripe: {
-      //       order_id: order_id,
-      //       payment_method_token: response.token.id.split('_')[1]
-      //     }
-      //   };
-      //   let res = await apiPostFetch('/api/unified/shop/payments/stripe/checkout', body, true);
-      //   console.log(res);
-      // });
-      console.log('test');
-      
-      if(elements && elements.getElement(CardElement)) {
-        console.log('test');
-        stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement)!,
-            billing_details: {
-            name: name,
+      const cardElement = elements && elements.getElement(CardElement);
+
+      if (cardElement) {
+        setLoading(true);
+
+        const response = await fetch('https://capable-parfait-de86c8.netlify.app/.netlify/functions/create-payment-intent');
+        // const response = await fetch('http://localhost:8888/.netlify/functions/create-payment-intent');
+        const {clientSecret} = await response.json();
+
+        await stripe
+          .confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: cardElement,
+              billing_details: {
+                name: 'Audrey Hepburn',
+              },
             },
-        })
-        .then( async (response: any) => {
-            let body = {
-            stripe: {
-                order_id: orderId,
-                payment_method_token: response.paymentMethod.id,
-                return_url: 'https://localhost:3000/stripe_success'
-            }
-            };
-            let res = await apiPostFetch('/api/unified/shop/payments/stripe/checkout', body, true);
-            if(res.errors.length !== 0) {
-            let ind = res.errors.findIndex((err: any) => { return err.type === 'requires_action'; });
-            console.log(ind);
-            if(ind >= 0) {
-                console.log(res.errors[ind].options.stripe_url);
-                await set('stripe_3ds', res.errors[ind].options.stripe_url);
-                history.push('/stripe_3ds')
-            }
-            }
-            console.log(res);
-        });
-        }
-    }
-    catch (e) {
-      setStripeData(e);
+          });
+
+        const intent = await stripe.retrievePaymentIntent(clientSecret);
+
+        console.log('intent', intent);
+
+        // @ts-ignore
+        setIntent(intent.paymentIntent);
+
+        // stripe.createPaymentMethod({
+        //   type: 'card',
+        //   card: elements.getElement(CardElement)!,
+        //   billing_details: {
+        //     name: 'Audrey Hepburn',
+        //   },
+        // })
+        //   .then(async (response: any) => {
+        //     if (response.paymentMethod) {
+        //       setResponse('Success');
+        //       setToken(response.paymentMethod.id);
+        //     } else if (response.error) {
+        //       setResponse(response.error.message);
+        //       setToken('');
+        //     }
+        //     console.log('response', response);
+        //   });
+      }
+    } catch (e) {
+      console.log('error', e);
+      // @ts-ignore
+      setIntent(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement options={{ hidePostalCode: true }}/>
-      <IonButton disabled={!stripe} type="submit">Submit</IonButton>
-    </form>
+    <IonPage>
+      <IonContent style={{height: '100vh', width: '100vw'}}>
+        <div style={{position: 'relative', top: '30%', width: '90%', margin: 'auto'}}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+            <div style={{ paddingBottom: '20px' }}>{window.location.href}</div>
+            <div style={{ border: '1px solid black', padding: '20px', width: '100%', marginBottom: '20px' }}>
+              <CardElement options={{hidePostalCode: true}}/>
+            </div>
+            <IonButton
+              disabled={!stripe || loading}
+              style={{ minWidth: '120px' }}
+              type="submit"
+              onClick={handleSubmit}
+            >
+              {loading ? <IonSpinner name="dots" /> : <span>Submit</span>}
+            </IonButton>
+          </div>
+          <div style={{paddingTop: '20px', display: 'flex', flexDirection: 'column'}}>
+            <pre>
+              {intent && <div>
+                {JSON.stringify(intent, null, 2)}
+              </div>}
+            </pre>
+          </div>
+        </div>
+      </IonContent>
+    </IonPage>
   )
 };
 
-export default CheckoutForm;
+export default StripePage;

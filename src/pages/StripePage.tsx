@@ -12,7 +12,6 @@ import { get, set } from '../utils/IonicStorage';
 import BasicHeader from '../components/BasicHeader';
 import CreditCard from '../components/CreditCard';
 import YourPurchase from '../components/YourPurchase';
-import ButtonsFooter from '../components/ButtonsFooter';
 
 import '../styles/index.css';
 import '../styles/text.css';
@@ -78,7 +77,7 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
           }
         });
         var form = document.getElementById("payment-form");
-        if (form) {
+        if(form) {
           form.addEventListener("submit", function(event) {
             event.preventDefault();
             // Complete payment when the submit button is clicked

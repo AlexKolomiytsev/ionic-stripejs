@@ -11,7 +11,7 @@ import { fetchServices, fetchLocations, fetchRegions, fetchClassTypes, fetchTrai
 import { get, set } from '../utils/IonicStorage';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 import '../styles/FiltersPage.css';
 import '../styles/index.css';
@@ -44,6 +44,7 @@ const FiltersPage: React.FC<Props> = ({ default_location_id }) => {
   useEffect(() => {
     const getEntryPoint = async () => {
       let entry = await get('entry_point');
+      console.log(entry);
       await setEntryPoint(entry);
     }
 
@@ -176,7 +177,7 @@ const FiltersPage: React.FC<Props> = ({ default_location_id }) => {
   }
 
   return (
-    <IonPage className='text'>
+    <IonPage style={{height: '100vh'}}>
       <IonLoading
        cssClass='loading'
        isOpen={showLoading}
@@ -186,8 +187,8 @@ const FiltersPage: React.FC<Props> = ({ default_location_id }) => {
       <IonHeader style={{position: 'relative', top: '0px'}}>
         <BasicHeader title={t('filter.filters')} secondButtonType='text' secondButton='Reset' onClickSecond={reset} />
       </IonHeader>
-      <IonContent style={{backgroundColor: '#F4F4F4'}}> {/*  style={{top: `${isPlatform('ios') ? '110px' : '64px'}`, height: `calc(100vh - ${isPlatform('ios') ? '187px' : '131px'})`}} */}
-        <div style={{display: 'flex', flexDirection: 'column', position: 'relative', backgroundColor: '#F4F4F4', minHeight: '100vh', paddingTop: '20px'}}>
+      <IonContent scroll-y={false} fullscreen={false} style={{backgroundColor: '#F4F4F4', position: 'relative', top: '0px' }}> {/*  style={{top: `${isPlatform('ios') ? '110px' : '64px'}`, height: `calc(100vh - ${isPlatform('ios') ? '187px' : '131px'})`}} , bottom: `${isPlatform("ios") ? '117px' : '57px'}`, height: `calc(100vh - ${isPlatform("ios") ? '179px' : '119px'})`*/}
+        <div style={{overflow: 'auto', position: 'relative', backgroundColor: '#F4F4F4', height: '100%', paddingTop: '20px', paddingBottom: `${isPlatform("ios") ? '117px' : '57px'}`}}>
           {/*<div style={{padding: '10px'}}></div>*/}
           {(entryPoint.classes || entryPoint.services) && <IonAccordionGroup>
             <IonCard className='filter-card'>
@@ -307,7 +308,7 @@ const FiltersPage: React.FC<Props> = ({ default_location_id }) => {
         </div>
       </IonContent>
         {/*<div className='footer-div-one-button' style={{bottom: '-80px'}} >*/}
-          <ButtonsFooter text='Apply' onClick={passFilters}/>
+          <BasicFooter text='Apply' onClick={passFilters}/>
         {/*</div>*/}
       </>}
     </IonPage>

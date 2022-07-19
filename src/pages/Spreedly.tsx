@@ -17,7 +17,6 @@ import { get } from '../utils/IonicStorage';
 import BasicHeader from '../components/BasicHeader';
 import CreditCard from '../components/CreditCard';
 import YourPurchase from '../components/YourPurchase';
-import ButtonsFooter from '../components/ButtonsFooter';
 
 const Payment: React.FC = () => {
 

@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonText } from '@ionic/react';
 import { chevronForwardOutline } from 'ionicons/icons';
@@ -18,6 +19,7 @@ import '../styles/text.css';
 import '../styles/FlowSelection.css';
 import BasicClassBookingItem from '../components/BasicClassBookingItem';
 import NoClassesPlaceholder from '../components/NoClassesPlaceholder';
+import BasicImageCard from '../components/BasicImageCard';
 
 type Category = {
     service_category: ServiceCategory;
@@ -27,7 +29,6 @@ type Category = {
     by_service_link: string;
     trainers: Trainer[];
     services: { [id: string]: TrainerActivity[] };
-    bookBy: string;
 }
 
 type Props = {
@@ -45,8 +46,7 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
   const [classesSection, setClassesSection] = useState<Section>();
   const [categories, setCategories] = useState<Category[]>();
   const [bookedOccurrences, setBookedOccurrences] = useState<Occurrence[]>();
-  const [update, setUpdate] = useState<boolean>(false);
-  const [show, setShow] = useState<Array<Trainer[] | { [id: string]: TrainerActivity[] }>>([]);
+  const [bookBy, setBookBy] = useState<string[]>([]);
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
       let classesSection = await data.find((section: Section) => { return section.id === 3; });
       data = []
       for(let i = 0; i < trainersSection.service_categories.length; i++) {
-          let item: Category = { service_category: trainersSection.service_categories[i], book_by_trainer: true, book_by_service: false, by_trainer_link: '/trainers', by_service_link: '/trainer_services', trainers: [], services: {}, bookBy: 'trainer' };
+          let item: Category = { service_category: trainersSection.service_categories[i], book_by_trainer: true, book_by_service: false, by_trainer_link: '/trainers', by_service_link: '/trainer_services', trainers: [], services: {} };
           let trainers = await fetchTrainers('?unified_filters[service_category_id]=' + trainersSection.service_categories[i].id);
           if(trainers) {
             item.trainers = trainers;
@@ -75,22 +75,20 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
             classesSection.service_categories.splice(ind, 1);
             console.log(classesSection.service_categories);
           }
+          else {
+            let item = { service_category: trainersSection.service_categories[i], book_by_trainer: true, book_by_service: false, by_trainer_link: '/trainers', by_service_link: '/trainer_services' };
+          }
           data.push(item);
       }
       for(let i = 0; i < classesSection.service_categories.length; i++) {
         let services = await fetchTrainerActivities('?unified_filters[service_category_id]=' + trainersSection.service_categories[i].id);
         if(services) {
             let filtered_services = await mapToNames(services);
-            data.push({ service_category: classesSection.service_categories[i], book_by_trainer: false, book_by_service: true, by_trainer_link: '/trainers', by_service_link: '/trainer_services', trainers: [], services: filtered_services, bookBy: 'class' });
+            data.push({ service_category: classesSection.service_categories[i], book_by_trainer: false, book_by_service: true, by_trainer_link: '/trainers', by_service_link: '/trainer_services', trainers: [], services: filtered_services });
         }
       }
-      console.log(data);
-    //   data = trainers.service_categories.concat(classes.service_categories.filter((classItem: ServiceCategory) => trainers.service_categories.find((trainerItem: ServiceCategory) => classItem.id !== trainerItem.id )));
       setCategories(data);
-      console.log(data);
-      // setBookBy(await data.map((item: Category) => { return item.book_by_trainer ? 'trainer' : 'class'}));
-      setShow(await data.map((item: Category) => { return item.book_by_trainer ? 'trainer' : 'class'}))
-      setUpdate(true);
+      setBookBy(await data.map((item: Category) => { return item.book_by_trainer ? 'trainer' : 'class'}));
       await clearFilters();
       if(client_id !== -1) {
         const since = new Date();
@@ -117,6 +115,32 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
     getSections();
   }, []);
 
+  const viewAll = async (index: number, category: Category) => {
+    if(bookBy[index] === 'trainer') {
+      await set('flow', 'trainers');
+      await set('current_service_category', category.service_category.id);
+      history.push(category.by_trainer_link);
+    }
+    else {
+        await set('flow', 'services');
+        await set('current_service_category', category.service_category.id);
+        await set('current_tab_name', category.service_category.name);
+        history.push(category.by_service_link);
+    }
+    }
+
+  const onClickTrainer = async (id: number) => {
+    await set('flow', 'trainers');
+    await set('current_trainer_id', id);
+    history.push('/trainer_profile');
+  }
+
+  const onClickService = async (service: TrainerActivity[]) => {
+    await set('flow', 'services');
+    await set('current_service', service);
+    history.push('/service_detail');
+  }
+
   return (
     <IonPage>
       <IonLoading
@@ -135,61 +159,22 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
                         <>
                             <div className=' two-side-container' style={{padding: '20px', paddingTop: '32px', paddingBottom: '8px', alignItems: 'center'}}>
                                 <IonText className='EGymText-20px-048'>{category.service_category.name}</IonText>
-                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={async () => {
-                                    if(category.bookBy === 'trainer') {
-                                      await set('flow', 'trainers');
-                                      await set('current_service_category', category.service_category.id);
-                                      history.push(category.by_trainer_link);
-                                    }
-                                    else {
-                                        await set('flow', 'services');
-                                        await set('current_service_category', category.service_category.id);
-                                        await set('current_tab_name', category.service_category.name);
-                                        history.push(category.by_service_link);
-                                    }
-                                    }}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
+                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={() => {viewAll(index, category)}}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
                             </div>
-                            <Segment values={['trainer', 'class']} names={[t('book_by_trainer'), t('book_by_service')]} tab={category.bookBy} setTab={(val) => {
-                                let array = categories;
-                                let item = {...array[index], bookBy: val};
-                                array[index] = item;
-                                setCategories(array);
-                                console.log(array);
-                                // console.log(categories);
-                                setUpdate(true);
+                            <Segment values={['trainer', 'class']} names={[t('book_by_trainer'), t('book_by_service')]} tab={bookBy[index]} setTab={async (val) => {
+                                setBookBy(bookBy=>({
+                                  ...bookBy,
+                                  [index]: val
+                               }));
                             }} />
                             <div className='scrollable' style={{backgroundColor: 'inherit', border: 'none'}}>
-                              {category.bookBy === 'trainer' ? 
+                              {bookBy[index] === 'trainer' ? 
                                 category.trainers && category.trainers.map((trainer: Trainer, index: number) => (
-                                  <IonCard key={trainer.id} className='trainer-card' onClick={ async () => {
-                                    await set('flow', 'trainers');
-                                    await set('current_trainer_id', trainer.id);
-                                    // await clearFilters();
-                                    history.push('/trainer_profile');
-                                  }}>
-                                  <IonCardContent className='trainer-card-content'>
-                                    <img src={trainer.image ? trainer.image : '/assets/icon/profile_image.png'} className='trainer-img' alt='Trainer'/>
-                                    <div style={{display: 'flex', justifyContent: 'center'}}>
-                                        <IonCardTitle className='EGymText-16px-032'>{trainer.name.split(' ')[0]}</IonCardTitle>
-                                    </div>
-                                    </IonCardContent>
-                                </IonCard>
+                                  <BasicImageCard image={trainer.image} text={trainer.name.split(' ')[0]} onClick={() => {onClickTrainer(trainer.id)}}/>
                                 ))
                               :
                                 category.services && Object.keys(category.services).map((key) => (
-                                    <IonCard key={key} className='trainer-card' onClick={ async () => {
-                                        await set('flow', 'services');
-                                        await set('current_service', category.services[key]);
-                                        console.log(category.services[key]);
-                                        history.push('/service_detail');
-                                    }}>
-                                      <IonCardContent className='trainer-card-content'>
-                                        <img src={category.services[key][0].service.service_image_url ? category.services[key][0].service.service_image_url : '/assets/icon/profile_image.png'} className='trainer-img' alt='Trainer'/>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <IonCardTitle className='EGymText-16px-032'>{category.services[key][0].service.service_title}</IonCardTitle>
-                                        </div>
-                                        </IonCardContent>
-                                    </IonCard>
+                                  <BasicImageCard image={category.services[key][0].service.service_image_url} text={category.services[key][0].service.service_title} onClick={() => {onClickService(category.services[key])}}/>
                                 ))
                               }
                             </div>
@@ -201,23 +186,11 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
                         <>
                             <div className=' two-side-container' style={{padding: '20px', paddingTop: '32px', paddingBottom: '8px', alignItems: 'center'}}>
                                 <IonText className='EGymText-20px-048'>{category.service_category.name}</IonText>
-                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={() => {history.push(category.bookBy === 'trainer' ? category.by_trainer_link : category.by_service_link);}}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
+                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={() => {history.push(bookBy[index] === 'trainer' ? category.by_trainer_link : category.by_service_link);}}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
                             </div>
                             <div className='scrollable' style={{backgroundColor: 'inherit', border: 'none'}}>
                                 {category.trainers && category.trainers.map((trainer: Trainer, index: number) => (
-                                  <IonCard key={trainer.id} className='trainer-card' onClick={ async () => {
-                                    await set('flow', 'trainers');
-                                    await set('current_trainer_id', trainer.id);
-                                    // await clearFilters();
-                                    history.push('/trainer_profile');
-                                  }}>
-                                  <IonCardContent className='trainer-card-content'>
-                                    <img src={trainer.image ? trainer.image : '/assets/icon/profile_image.png'} className='trainer-img' alt='Trainer'/>
-                                    <div style={{display: 'flex', justifyContent: 'center'}}>
-                                        <IonCardTitle className='EGymText-16px-032'>{trainer.name.split(' ')[0]}</IonCardTitle>
-                                    </div>
-                                    </IonCardContent>
-                                </IonCard>
+                                 <BasicImageCard image={trainer.image} text={trainer.name.split(' ')[0]} onClick={() => {onClickTrainer(trainer.id)}}/>
                                 ))}
                             </div>
                         </>
@@ -228,23 +201,11 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
                         <>
                             <div className=' two-side-container' style={{padding: '20px', paddingTop: '32px', paddingBottom: '8px', alignItems: 'center'}}>
                                 <IonText className='EGymText-20px-048'>{category.service_category.name}</IonText>
-                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={() => {history.push(category.bookBy === 'trainer' ? category.by_trainer_link : category.by_service_link);}}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
+                                <IonButton fill='clear' className='EGymText-16px-03 view-all' onClick={() => {history.push(bookBy[index] === 'trainer' ? category.by_trainer_link : category.by_service_link);}}>{t('classes_tab.view_all') + ' '} <IonIcon icon={chevronForwardOutline}></IonIcon></IonButton>
                             </div>
                             <div className='scrollable' style={{backgroundColor: 'inherit', border: 'none'}}>
                               {category.services && Object.keys(category.services).map((key) => (
-                                    <IonCard key={key} className='trainer-card' onClick={ async () => {
-                                        await set('flow', 'services');
-                                        await set('current_service', category.services[key]);
-                                        console.log(category.services[key]);
-                                        history.push('/service_detail');
-                                    }}>
-                                      <IonCardContent className='trainer-card-content'>
-                                        <img src={category.services[key][0].service.service_image_url ? category.services[key][0].service.service_image_url : '/assets/icon/profile_image.png'} className='trainer-img' alt='Trainer'/>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <IonCardTitle className='EGymText-16px-032'>{category.services[key][0].service.service_title}</IonCardTitle>
-                                        </div>
-                                        </IonCardContent>
-                                    </IonCard>
+                                    <BasicImageCard image={category.services[key][0].service.service_image_url} text={category.services[key][0].service.service_title} onClick={() => {onClickService(category.services[key])}}/>
                                 ))
                               }
                             </div>
@@ -263,6 +224,7 @@ const PersonalTrainingBooking: React.FC<Props> = ({ client_id, default_location_
                 : <NoClassesPlaceholder title={t('no_placeholder.no_booked_classes')} subtitle={t('no_placeholder.go_check_latest')} />}
 
           </div></>}
+          <IonText>{window.location.href}</IonText>
       </IonContent>
     </IonPage>
   );

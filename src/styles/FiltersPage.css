@@ -22,6 +22,11 @@
   margin: 0px 20px 12px 20px;
 }
 
+.filter-item {
+  --padding-end: 20px;
+  --inner-border-width: 0.55px 0px 0px 0px;
+}
+
 .custom-chip {
   border-radius: 4px;
   padding: 3px 7px;

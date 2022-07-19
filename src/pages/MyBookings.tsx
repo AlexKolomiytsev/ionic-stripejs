@@ -90,7 +90,7 @@ const MyBookings: React.FC<Props> = ({ userPicture, client_id }) => {
   useEffect(() => {
     var options = {
     root: document.querySelector("body"),
-    rootMargin: '0px 0px -350px 0px',
+    rootMargin: '0px 0px -450px 0px',
     threshold: [0]
     };
 
@@ -98,7 +98,7 @@ const MyBookings: React.FC<Props> = ({ userPicture, client_id }) => {
         entries.forEach(function(entry: IntersectionObserverEntry) {
             if (entry.isIntersecting) {
               console.log(entry.target.id);
-              setChosenDayIndex(parseInt(entry.target.id.split('\\')[1]));
+              setChosenDayIndex(parseInt(entry.target.id.split('\\')[1]) - 1);
               // observer.unobserve(entry.target);
             }
         });
@@ -114,6 +114,7 @@ const MyBookings: React.FC<Props> = ({ userPicture, client_id }) => {
   }, [bookedOccurencesByDates]);
 
   useEffect(() => {
+    console.log(chosenDayIndex, prev);
     if(swiper && prev < chosenDayIndex && chosenDayIndex % 7 === 0) {
       //Number(format(chosenDay, 'e')) === 1
       swiper.slideTo(chosenDayIndex);
@@ -150,6 +151,7 @@ const MyBookings: React.FC<Props> = ({ userPicture, client_id }) => {
     await arr.forEach((item, index) => {
       let date = new Date(item.occurs_at);
       date.setHours(0, 0, 0, 0);
+      console.log(item);
       byDates[String(date)].push(item);
     })
     return byDates;

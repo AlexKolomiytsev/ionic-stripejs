@@ -9,7 +9,7 @@ import { currency_symbols, ClientServicePackage } from '../utils/data';
 import { fetchClientPackages } from '../utils/utils';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 // import './ActiveProducts.css';
 import '../styles/index.css';
@@ -56,9 +56,9 @@ const MyProducts: React.FC = () => {
   }
 
   return (
-    <IonPage className='text'>
+    <IonPage  style={{backgroundColor: '#F4F4F4'}}>
       <IonHeader style={{position: 'relative', top: '0px', zIndex: 20}}>
-        <BasicHeader title={t('headers.my_products')} />
+        <BasicHeader title={t('headers.my_products')} onClick={ async () => {await Portals.publish({ topic: 'subscription', data: {type: 'dismiss', data: null } });}} />
       </IonHeader>
       <IonLoading
         cssClass='loading'
@@ -91,11 +91,8 @@ const MyProducts: React.FC = () => {
             )
           })}
         </div>
-        {/*<div className='footer-div-one-button' >
-          <ButtonsFooter text={t('footer.buy_a_package')} onClick={() => {history.push('/pt_products_list');}}/>
-        </div>*/}
       </IonContent>
-      <ButtonsFooter text={t('footer.buy_a_package')} onClick={() => {history.push('/pt_products_list');}}/>
+      <BasicFooter text={t('footer.buy_a_package')} onClick={() => {history.push('/pt_products_list');}}/>
     </IonPage>
   );
 };

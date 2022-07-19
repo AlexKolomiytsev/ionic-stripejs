@@ -8,7 +8,7 @@ import { apiPut } from '../utils/requests';
 import { UserData, Country } from '../utils/data';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 // import './ProfileBillingAddress.css';
 import '../styles/index.css';
@@ -142,11 +142,8 @@ const BillingAddress: React.FC<Props> = ({ userData }) => {
             </IonItemGroup>
           </IonList>
         </div>
-        {/*<div  className='footer-div-one-button' >
-          <ButtonsFooter text={t('footer.save_address')} onClick={saveChanges}/>
-        </div>*/}
       </IonContent>
-      <ButtonsFooter text={t('footer.save_address')} onClick={saveChanges}/>
+      <BasicFooter text={t('footer.save_address')} onClick={saveChanges}/>
     </IonPage>
   );
 };

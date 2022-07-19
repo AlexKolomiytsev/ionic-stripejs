@@ -76,7 +76,9 @@ const BookingListPage: React.FC<Props> = ({ userPicture, client_id }) => {
   const [prev, setPrev] = useState(0);
 
   useEffect(() => {
+    console.log(allDays);
     const getOccurrences = async () => {
+      await set('entry_point', { classes: true, locations: true, class_types: true, instructors: true, services: false });
       if(client_id !== -1) {
         const since = new Date();
         const till = new Date();
@@ -122,7 +124,6 @@ const BookingListPage: React.FC<Props> = ({ userPicture, client_id }) => {
       }
     }
 
-    set('entry_point', { classes: true, locations: true, class_types: true, instructors: true, services: false });
     getOccurrences();
   }, []);
 
@@ -191,11 +192,9 @@ const BookingListPage: React.FC<Props> = ({ userPicture, client_id }) => {
   const mapOccurencesToDates = async ( arr: Occurrence[] ) => {
     let days = allDays.slice(chosenDayIndex);
     let byDates: { [id: string]: Occurrence[] } = Object.fromEntries(days.map(i => { return [String(i), []]; }));
-    console.log(byDates)
     await arr.forEach((item, index) => {
       let date = new Date(item.occurs_at);
       date.setHours(0, 0, 0, 0);
-      console.log(date); 
       byDates[String(date)].push(item);
     })
     return byDates;
@@ -312,7 +311,7 @@ const BookingListPage: React.FC<Props> = ({ userPicture, client_id }) => {
                 let index = i + startIndex;
                 return (
                   <div style={{paddingBottom: '5px'}} id={format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')} key={format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')} ref={el => itemsRef.current[i] = el}>
-                    <div className='sticky-date' style={{position: 'sticky', top: '277px', zIndex: 10, background: '#F4F4F4', paddingTop: '15px', paddingBottom: '15px'}} id={key + '\\' + index} >{/*'stickyDate_' + format(new Date(key), 'MMM') + '_' + format(new Date(key), 'd')*/}
+                    <div className='sticky-date' style={{position: 'sticky', top: '271px', zIndex: 10, background: '#F4F4F4', paddingTop: '15px', paddingBottom: '15px'}} id={key + '\\' + index} >{/*'stickyDate_' + format(new Date(key), 'MMM') + '_' + format(new Date(key), 'd')*/}
                       <IonText className='date'>{format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')}</IonText>
                     </div>
                     {bookedOccurencesByDates[key].map((item: Occurrence) => {
@@ -329,7 +328,7 @@ const BookingListPage: React.FC<Props> = ({ userPicture, client_id }) => {
                 let index = i + startIndex;
                 return (
                   <div style={{paddingBottom: '5px'}} id={format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')} key={format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')} ref={el => itemsRef.current[i] = el}>
-                    <div className='sticky-date' style={{position: 'sticky', top: '277px', zIndex: 10, background: '#F4F4F4', paddingTop: '15px', paddingBottom: '15px'}} id={key + '\\' + index} >{/*'stickyDate_' + format(new Date(key), 'MMM') + '_' + format(new Date(key), 'd')*/}
+                    <div className='sticky-date' style={{position: 'sticky', top: '271px', zIndex: 10, background: '#F4F4F4', paddingTop: '15px', paddingBottom: '15px'}} id={key + '\\' + index} >{/*'stickyDate_' + format(new Date(key), 'MMM') + '_' + format(new Date(key), 'd')*/}
                       <IonText className='date'>{format(new Date(key), 'eee') + ', ' + format(new Date(key), 'MMM')  + ' ' + format(new Date(key), 'd')}</IonText>
                     </div>
                     {occurencesByDates[key].map((item: Occurrence) => {

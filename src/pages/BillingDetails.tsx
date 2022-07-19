@@ -6,7 +6,7 @@ import Portals from '@ionic/portals';
 import InputMask from 'react-input-mask';
 
 import BasicHeader from '../components/BasicHeader';
-import ButtonsFooter from '../components/ButtonsFooter';
+import BasicFooter from '../components/BasicFooter';
 
 // import './ProfileBilling.css';
 import '../styles/index.css';
@@ -124,7 +124,7 @@ const BillingDetails: React.FC<Props> = ({ fourDigits }) => {
             </IonList>
           </div>
         </IonContent>
-        <ButtonsFooter text={t('footer.save_billing_details')}/>
+        <BasicFooter text={t('footer.save_billing_details')}/>
     </IonPage>
   );
 };
