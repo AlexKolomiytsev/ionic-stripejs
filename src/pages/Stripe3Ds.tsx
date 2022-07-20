@@ -33,7 +33,7 @@ const Stripe3Ds: React.FC = () => {
       let url: string = await get('stripe_3ds');
       await setStripe3Ds(url);
 
-      console.log('stripe url w', url);
+      console.log('stripe url', url);
 
       // await Browser.open({ url: url, presentationStyle: 'popover' });
       // browser.executeScript(...);
