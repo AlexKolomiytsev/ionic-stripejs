@@ -137,20 +137,21 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
                     // console.log('paymentIntent', paymentIntent);
 
                     await set('stripe_3ds', requiredAction.options.stripe_url);
-                    history.push('/stripe_3ds');
+                    // history.push('/stripe_3ds');
 
-                    // await Portals.publish({
-                    //   topic: 'subscription',
-                    //   data: {
-                    //     type: 'openWebView',
-                    //     "data": {
-                    //       "url": requiredAction.options.stripe_url,
-                    //       "endFlowUrlPatterns": [
-                    //         "https://localhost/stripe_success"
-                    //       ]
-                    //     }
-                    //   }
-                    // });
+                    console.log('portals publish');
+                    await Portals.publish({
+                      topic: 'subscription',
+                      data: {
+                        type: 'openWebView',
+                        "data": {
+                          "url": requiredAction.options.stripe_url,
+                          "endFlowUrlPatterns": [
+                            `${window.location.origin}/stripe-success`
+                          ]
+                        }
+                      }
+                    });
                   }
                 }
               });
@@ -223,7 +224,7 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
          isOpen={showLoading}
          onDidDismiss={() => setShowLoading(false)}
        />
-        <IonText>{window.location.host}</IonText>
+        <IonText>Location origin - {window.location.origin}</IonText>
         {stripe3Ds ? <iframe src={stripe3Ds} ></iframe> : null}
         <form id="payment-form">
             <div id="card-element"></div>

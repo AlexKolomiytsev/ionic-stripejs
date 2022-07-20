@@ -21,12 +21,14 @@ declare var Stripe: any;
 const Stripe3Ds: React.FC = () => {
 
   const publishable_key = 'pk_test_MaMhlqv0uPa8mFSOKTJGYO8U';
+  var stripe = Stripe('pk_test_MaMhlqv0uPa8mFSOKTJGYO8U');
 
   let history = useHistory();
   const { t } = useTranslation();
 
   const [stripe3Ds, setStripe3Ds] = useState<string>();
   const [showLoading, setShowLoading] = useState(true);
+  const [authStatus, setAuthStatus] = useState();
 
   useEffect(() => {
     const getStripe3DsUrl = async () => {
@@ -119,12 +121,22 @@ const Stripe3Ds: React.FC = () => {
         {stripe3Ds ?
           <iframe
             id="mainframe"
+            scrolling="false"
             src={stripe3Ds}
             style={{ width: '100vw', height: '100vh' }}
             onLoad={() => {
-              unloadHandler(document.getElementById("mainframe") as HTMLIFrameElement, (newURL: string) => {
+              unloadHandler(document.getElementById("mainframe") as HTMLIFrameElement, async (newURL: string) => {
                 console.log("URL changed:", newURL);
-                alert(newURL);
+                const queryParams = new URLSearchParams(newURL);
+
+                const clientSecret = queryParams.get('payment_intent_client_secret')
+
+                const intent = await stripe.retrievePaymentIntent(clientSecret);
+                console.log('intent', intent);
+
+                console.log('clientSecret', clientSecret);
+
+                // setStripe3Ds('')
               });
             }}
           ></iframe>
