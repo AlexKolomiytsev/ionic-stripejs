@@ -16,6 +16,7 @@ import YourPurchase from '../components/YourPurchase';
 import '../styles/index.css';
 import '../styles/text.css';
 import '../styles/Stripe.css';
+import Portals from "@ionic/portals";
 
 declare var Stripe: any;
 
@@ -51,6 +52,10 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
   const [error, setError] = useState<any>('');
 
   useEffect(() => {
+    // Portals.subscribe<string>({ topic: 'openWebView' }, async (response) => {
+    //   console.log('openWebView response', response);
+    // });
+
     const getProduct = async () => {
       let current_flow = await get('payment_flow');
       let order_id = await get('order_id');
@@ -102,24 +107,52 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
                 },
               })
               .then( async (response: any) => {
+
                 let body = {
                   stripe: {
                     order_id: order_id,
                     payment_method_token: response.paymentMethod.id,
-                    return_url: 'https://localhost:3000/stripe_success'
+                    return_url: `${window.location.origin}/stripe-success`
                   }
                 };
+
                 let res = await apiPostFetch('/api/unified/shop/payments/stripe/checkout', body, true);
-                if(res.errors.length !== 0) {
-                  let ind = res.errors.findIndex((err: any) => { return err.type === 'requires_action'; });
-                  console.log(ind);
-                  if(ind >= 0) {
-                    console.log(res.errors[ind].options.stripe_url);
-                    await set('stripe_3ds', res.errors[ind].options.stripe_url);
-                    history.push('/stripe_3ds')
+
+                console.log('checkout response', res);
+
+                if (res.errors.length) {
+                  let requiredAction = res.errors.find((err: any) => { return err.type === 'requires_action'; });
+
+                  console.log('requiredAction', requiredAction);
+
+                  if (requiredAction) {
+
+                    // const intent = await stripe.confirmCardPayment(requiredAction.options.client_secret, { payment_method: response.paymentMethod.id  });
+                    // console.log('intent', intent);
+
+                    // const intent = await stripe.retrievePaymentIntent(requiredAction.options.client_secret);
+                    // console.log('intent', intent);
+
+                    // const paymentIntent = await stripe.handleCardAction(requiredAction.options.client_secret);
+                    // console.log('paymentIntent', paymentIntent);
+
+                    await set('stripe_3ds', requiredAction.options.stripe_url);
+                    history.push('/stripe_3ds');
+
+                    // await Portals.publish({
+                    //   topic: 'subscription',
+                    //   data: {
+                    //     type: 'openWebView',
+                    //     "data": {
+                    //       "url": requiredAction.options.stripe_url,
+                    //       "endFlowUrlPatterns": [
+                    //         "https://localhost/stripe_success"
+                    //       ]
+                    //     }
+                    //   }
+                    // });
                   }
                 }
-                console.log(res);
               });
             }
             catch (e) {
@@ -190,6 +223,7 @@ const StripePage: React.FC<Props> = ({ name, fourDigits }) => {
          isOpen={showLoading}
          onDidDismiss={() => setShowLoading(false)}
        />
+        <IonText>{window.location.host}</IonText>
         {stripe3Ds ? <iframe src={stripe3Ds} ></iframe> : null}
         <form id="payment-form">
             <div id="card-element"></div>

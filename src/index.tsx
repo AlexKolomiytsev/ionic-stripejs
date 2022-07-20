@@ -6,7 +6,7 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 // import reportWebVitals from './reportWebVitals';
 
-if (true) { 
+if (!Capacitor?.isNativePlatform()) { 
   // useful to mock portals initial context when testing app locally in browser !Capacitor?.isNativePlatform()
   window.portalInitialContext = {
     value: {

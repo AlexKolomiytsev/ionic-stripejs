@@ -21,8 +21,8 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { PortalsProvider } from './hooks/usePortalsContext';
 
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
+// import {Elements} from '@stripe/react-stripe-js';
+// import {loadStripe} from '@stripe/stripe-js';
 
 import { auth } from './utils/const';
 import { authorizeUser } from './utils/auth';
@@ -61,7 +61,7 @@ import PTProductDetail from './pages/PTProductDetail';
 import PastPurchases from './pages/PastPurchases';
 import Receipt from './pages/Receipt';
 import Payment from './pages/Payment';
-import StripePage from './pages/StripePage2';
+import StripePage from './pages/StripePage';
 import Stripe3Ds from './pages/Stripe3Ds';
 import StripeResult from './pages/StripeResult';
 import Spreedly from './pages/Spreedly';
@@ -91,7 +91,7 @@ import StripeCapasitor from './pages/StripeCapasitor';
 import UpcomingTraining from './pages/UpcomingTraining';
 import Portals from '@ionic/portals';
 
-const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+// const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 type AppProps = {
   context: {
@@ -134,29 +134,18 @@ const App: React.FC<AppProps> = ({ context }) => {
         let resp = await authorizeUser(context.authToken, context.url);
         resp = true;
         if(resp) {
-          // await setModalHeader('Authorization success');
-          // await setModalBody('');
-          // setModalOpen(true);
           resp = await fetchUserData();
           if(resp !== false) {
-            // console.log(resp);
-            // await setModalHeader('ProfileFetch success');
-            // await setModalBody('');
-            // setModalOpen(true);
             await setUserData(resp);
             setShowLoading(false);
             await setClubSettings(await fetchSettings());
           }
           if(resp === false) {
-            await setModalHeader('ProfileFetch error');
-            await setModalBody('');
             setShowLoading(false);
             setModalOpen(true);
           }
         }
         else {
-          await setModalHeader('Error');
-          await setModalBody('Unable to authorize user.');
           setShowLoading(false);
           setModalOpen(true);
         }
@@ -206,13 +195,15 @@ const App: React.FC<AppProps> = ({ context }) => {
     return "#"+RR+GG+BB;
   }
 
+
+
   return(
       <IonApp>
-        <IonLoading
+        {/*<IonLoading
           cssClass='loading'
           isOpen={showLoading}
           onDidDismiss={() => setShowLoading(false)}
-        />
+        />*/}
 
         {/*<IonModal
           isOpen={modalOpen}
@@ -437,15 +428,19 @@ const App: React.FC<AppProps> = ({ context }) => {
               </Route>
 
               <Route exact path='/stripe'>
-                {userData &&
-                (userData.credit_card && userData.credit_card.title) ?
+              {userData &&
+                (userData.credit_card && userData.credit_card.title) ? 
                   <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
-                  : <Payment/>
-                  //   <Elements stripe={stripePromise}>
-                  //      <StripePage name={userData.name} fourDigits={userData.credit_card.title.substring(userData.credit_card.title.length - 4)}/>
-                  //   </Elements>
-                  // : <Payment/>
-                }
+                  : <StripePage name={userData.name}/>
+              //   <Elements stripe={stripePromise}>
+              //      <StripePage/>
+              //   </Elements>
+              // : <Payment/>
+              }
+              </Route>
+
+              <Route exact path='/stripe-success'>
+                <div>stripe success</div>
               </Route>
 
               <Route exact path='/stripe_capacitor'>
@@ -464,7 +459,7 @@ const App: React.FC<AppProps> = ({ context }) => {
                 <Spreedly />
               </Route>
 
-              <Route exact path='/home'>
+              <Route exact path="/home">
                 <Redirect to="/flow_selection" />
               </Route>
 
