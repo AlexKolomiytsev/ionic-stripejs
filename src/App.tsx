@@ -72,7 +72,7 @@ const App: React.FC = () => (
                 <IonTitle className="title">Home</IonTitle>
               </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen>
+            <IonContent style={{height: '100vh', width: '100vw'}}>
               <IonCard>
 
                 <IonCardHeader>
