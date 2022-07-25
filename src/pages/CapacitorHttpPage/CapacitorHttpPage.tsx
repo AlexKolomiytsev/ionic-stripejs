@@ -1,12 +1,8 @@
 import {FC, useCallback, useState} from 'react';
 import {Http, HttpResponse} from "@capacitor-community/http";
-import {IonButton, IonInput, IonText} from '@ionic/react';
+import {IonButton, IonContent, IonInput, IonPage, IonText} from '@ionic/react';
 
-type Props = {
-
-};
-
-const CapacitorHttpPage: FC<Props> = () => {
+const CapacitorHttpPage: FC = () => {
   const [name, setName] = useState();
   const [age, setAge] = useState();
 
@@ -24,7 +20,8 @@ const CapacitorHttpPage: FC<Props> = () => {
   }, [name])
 
   return (
-    <div>
+    <IonPage>
+      <IonContent fullscreen>
       <IonText>Predict age based on a name:</IonText>
 
       <IonInput
@@ -40,7 +37,8 @@ const CapacitorHttpPage: FC<Props> = () => {
       <div>
         <IonText>Your age: {age || '?'}</IonText>
       </div>
-    </div>
+      </IonContent>
+    </IonPage>
   );
 };
 
