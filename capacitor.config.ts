@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'build',
   bundledWebRuntime: false,
   server: {
-    hostname: 'localhost',
+    hostname: 'floating-bayou-00569.herokuapp.com',
     androidScheme: 'https',
     iosScheme: 'ionic'
   }

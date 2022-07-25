@@ -9,15 +9,54 @@ const CapacitorHttpPage: FC = () => {
   const request = useCallback(async () => {
     if (!name) return;
 
-    const options = {
+    const response: HttpResponse = await Http.get({
       url: 'https://api.agify.io',
-      params: {name}
-    };
+      params: {name},
+    });
 
-    const response: HttpResponse = await Http.get(options);
-
-    setAge(response.data.age)
+    setAge(response.data.age);
   }, [name])
+
+  const request2 = useCallback(async () => {
+    try {
+      const response: HttpResponse = await Http.get({
+        // url: 'http://localhost:3030/set-cookie',
+        url: 'https://floating-bayou-00569.herokuapp.com/set-cookie',
+        webFetchExtra: {
+          credentials: 'include'
+        }
+      });
+
+      console.log('response 2', response);
+      console.log('response 2', response.headers);
+    } catch (e) {
+      console.log(e);
+      // @ts-ignore
+      // alert(JSON.stringify(e.message, null, 2))
+    }
+
+  }, [])
+
+  const request3 = useCallback(async () => {
+    try {
+      const response: HttpResponse = await Http.get({
+        // url: 'http://localhost:3030/read-cookie',
+        url: 'https://floating-bayou-00569.herokuapp.com/read-cookie',
+        webFetchExtra: {
+          credentials: 'include'
+        }
+      });
+
+      console.log('response 3', response);
+
+      alert(`response.data.message -- ${response.data.rememberme || 'NO COOKIE'}`);
+    } catch (e) {
+      console.log(e);
+      // @ts-ignore
+      alert(JSON.stringify(e.message, null, 2))
+    }
+
+  }, [])
 
   return (
     <IonPage>
@@ -37,6 +76,14 @@ const CapacitorHttpPage: FC = () => {
         <div>
           <IonText>Your age: {age || '?'}</IonText>
         </div>
+
+        <IonButton color="primary" onClick={request2}>
+          Set cookie
+        </IonButton>
+
+        <IonButton color="primary" onClick={request3}>
+          Read cookie
+        </IonButton>
       </IonContent>
     </IonPage>
   );
