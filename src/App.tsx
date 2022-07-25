@@ -75,9 +75,6 @@ const App: React.FC = () => (
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
-        <Route exact path="/home">
-          <Redirect to="/capacitorhttp" />
-        </Route>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
