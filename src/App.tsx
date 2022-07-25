@@ -1,6 +1,7 @@
+import React from "react";
 import { Redirect, Route } from 'react-router-dom';
 import {
-  IonApp,
+  IonApp, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonPage, IonRouterLink,
   IonRouterOutlet,
   setupIonicReact
 } from '@ionic/react';
@@ -28,6 +29,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import StripePage from './pages/StripePage';
+import CapacitorHttpPage from './pages/CapacitorHttpPage';
 
 // const stripePromise = loadStripe('pk_test_MaMhlqv0uPa8mFSOKTJGYO8U');
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
@@ -39,13 +41,42 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/home">
+        <Route exact path="/capacitorhttp">
+          <CapacitorHttpPage />
+        </Route>
+
+        <Route exact path="/stripe">
           <Elements stripe={stripePromise}>
             <StripePage />
           </Elements>
         </Route>
+        <Route exact path="/home">
+          <IonPage>
+            <IonContent fullscreen>
+              <IonCard>
+
+                <IonCardHeader>
+                  <IonCardTitle>Navigation</IonCardTitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  <div>
+                    <IonRouterLink routerLink={`/capacitorhttp`}>"/capacitorhttp"</IonRouterLink>
+                  </div>
+                  <div>
+                    <IonRouterLink routerLink={`/stripe`}>"/stripe"</IonRouterLink>
+                  </div>
+                </IonCardContent>
+
+              </IonCard>
+            </IonContent>
+          </IonPage>
+        </Route>
         <Route exact path="/">
           <Redirect to="/home" />
+        </Route>
+        <Route exact path="/home">
+          <Redirect to="/capacitorhttp" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

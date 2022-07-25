@@ -1,0 +1,47 @@
+import {FC, useCallback, useState} from 'react';
+import {Http, HttpResponse} from "@capacitor-community/http";
+import {IonButton, IonInput, IonText} from '@ionic/react';
+
+type Props = {
+
+};
+
+const CapacitorHttpPage: FC<Props> = () => {
+  const [name, setName] = useState();
+  const [age, setAge] = useState();
+
+  const request = useCallback(async () => {
+    if (!name) return;
+
+    const options = {
+      url: 'https://api.agify.io',
+      params: { name }
+    };
+
+    const response: HttpResponse = await Http.get(options);
+
+    setAge(response.data.age)
+  }, [name])
+
+  return (
+    <div>
+      <IonText>Predict age based on a name:</IonText>
+
+      <IonInput
+        value={name}
+        placeholder="Enter your name"
+        onIonChange={(e: any) => setName(e.detail.value!)}
+      ></IonInput>
+
+      <IonButton color="primary" onClick={request}>
+        Do request
+      </IonButton>
+
+      <div>
+        <IonText>Your age: {age || '?'}</IonText>
+      </div>
+    </div>
+  );
+};
+
+export default CapacitorHttpPage;
