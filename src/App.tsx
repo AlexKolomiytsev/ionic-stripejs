@@ -1,8 +1,18 @@
 import React from "react";
 import { Redirect, Route } from 'react-router-dom';
 import {
-  IonApp, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonPage, IonRouterLink,
-  IonRouterOutlet,
+  IonApp,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+  IonHeader, IonIcon,
+  IonPage,
+  IonRouterLink,
+  IonRouterOutlet, IonTitle,
+  IonToolbar,
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -30,6 +40,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import StripePage from './pages/StripePage';
 import CapacitorHttpPage from './pages/CapacitorHttpPage';
+import {chevronBackOutline} from "ionicons/icons";
 
 // const stripePromise = loadStripe('pk_test_MaMhlqv0uPa8mFSOKTJGYO8U');
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
@@ -52,6 +63,15 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/home">
           <IonPage>
+            <IonHeader>
+              <IonToolbar>
+                <IonButton fill="clear" onClick={() => alert('back')}>
+                  <IonIcon icon={chevronBackOutline} />
+                  Back
+                </IonButton>
+                <IonTitle className="title">Home</IonTitle>
+              </IonToolbar>
+            </IonHeader>
             <IonContent fullscreen>
               <IonCard>
 
