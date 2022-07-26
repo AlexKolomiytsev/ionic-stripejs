@@ -1,0 +1,11 @@
+{
+	"appId": "floatingbayou00569.herokuapp.com",
+	"appName": "test-ionic-with-stripe",
+	"webDir": "build",
+	"bundledWebRuntime": false,
+	"server": {
+		"hostname": "floating-bayou-00569.herokuapp.com",
+		"androidScheme": "https",
+		"iosScheme": "ionic"
+	}
+}

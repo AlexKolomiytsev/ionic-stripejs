@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">test-ionic-with-stripe</string>
+    <string name="title_activity_main">test-ionic-with-stripe</string>
+    <string name="package_name">floatingbayou00569.herokuapp.com</string>
+    <string name="custom_url_scheme">floatingbayou00569.herokuapp.com</string>
+</resources>
